@@ -74,17 +74,7 @@ export async function PUT(
     if (!item) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
-    return NextResponse.json({
-      _id: item._id,
-      name: item.name,
-      price: item.price,
-      description: item.description,
-      imageUrl: item.imageUrl,
-      category: item.category,
-      stock: item.stock ?? 0,
-      createdAt: item.createdAt?.toISOString(),
-      updatedAt: item.updatedAt?.toISOString(),
-    });
+    return NextResponse.json(item);
   } catch (error) {
     console.error("PUT /api/items/[id]:", error);
     return NextResponse.json(
