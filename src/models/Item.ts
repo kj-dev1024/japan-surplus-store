@@ -1,7 +1,7 @@
-import mongoose, { Schema, model, models } from 'mongoose';
+import mongoose, { Schema, model, models } from "mongoose";
 
 export interface IItem {
-  _id: string;
+  _id: mongoose.Types.ObjectId;
   name: string;
   price: number;
   description: string;
@@ -24,4 +24,4 @@ const ItemSchema = new Schema<IItem>(
   { timestamps: true }
 );
 
-export const Item = models.Item ?? model<IItem>('Item', ItemSchema);
+export const Item = models.Item ?? model<IItem>("Item", ItemSchema);
