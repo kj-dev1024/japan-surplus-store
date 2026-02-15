@@ -5,6 +5,14 @@ import { User } from "@/models/User";
 import { signToken } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
+  interface UserResponse {
+    _id: string;
+    name: string;
+    role: string;
+    username: string;
+    password: string;
+  }
+
   try {
     const body = await request.json();
     const { username, password } = body;
@@ -18,7 +26,7 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const user = await User.findOne({
       username: String(username).trim(),
-    }).lean();
+    }).lean<UserResponse>();
     if (!user) {
       return NextResponse.json(
         { error: "Invalid credentials" },
