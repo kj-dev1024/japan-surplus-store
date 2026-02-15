@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import mongoose from 'mongoose';
-import { connectDB } from '@/lib/db';
-import { Item } from '@/models/Item';
+import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
+import { connectDB } from "@/lib/db";
+import { Item } from "@/models/Item";
 
 async function requireAuth(request: NextRequest): Promise<boolean> {
-  const authHeader = request.headers.get('authorization');
-  const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  const authHeader = request.headers.get("authorization");
+  const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
   if (!token) return false;
-  const { verifyToken } = await import('@/lib/auth');
+  const { verifyToken } = await import("@/lib/auth");
   const payload = verifyToken(token);
   return !!payload?.username;
 }
@@ -19,28 +19,19 @@ export async function GET(
   try {
     const { id } = await params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
     await connectDB();
     const item = await Item.findById(id).lean();
     if (!item) {
-      return NextResponse.json({ error: 'Item not found' }, { status: 404 });
+      return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
-    return NextResponse.json({
-      _id: item._id.toString(),
-      name: item.name,
-      price: item.price,
-      description: item.description,
-      imageUrl: item.imageUrl,
-      category: item.category,
-      stock: item.stock ?? 0,
-      createdAt: item.createdAt?.toISOString(),
-      updatedAt: item.updatedAt?.toISOString(),
-    });
+
+    return NextResponse.json(item);
   } catch (error) {
-    console.error('GET /api/items/[id]:', error);
+    console.error("GET /api/items/[id]:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch item' },
+      { error: "Failed to fetch item" },
       { status: 500 }
     );
   }
@@ -51,23 +42,29 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   if (!(await requireAuth(request))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   try {
     const { id } = await params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
     await connectDB();
     const body = await request.json();
     const update: Record<string, unknown> = {};
     if (body.name !== undefined) update.name = String(body.name).trim();
-    if (typeof body.price === 'number') update.price = body.price;
-    if (body.description !== undefined) update.description = String(body.description).trim();
-    if (body.imageUrl !== undefined) update.imageUrl = String(body.imageUrl).trim();
-    if (body.category !== undefined) update.category = body.category === '' ? undefined : String(body.category).trim();
-    if (typeof body.stock === 'number' && body.stock >= 0) update.stock = body.stock;
-    else if (body.stock !== undefined) update.stock = Math.max(0, Number(body.stock) || 0);
+    if (typeof body.price === "number") update.price = body.price;
+    if (body.description !== undefined)
+      update.description = String(body.description).trim();
+    if (body.imageUrl !== undefined)
+      update.imageUrl = String(body.imageUrl).trim();
+    if (body.category !== undefined)
+      update.category =
+        body.category === "" ? undefined : String(body.category).trim();
+    if (typeof body.stock === "number" && body.stock >= 0)
+      update.stock = body.stock;
+    else if (body.stock !== undefined)
+      update.stock = Math.max(0, Number(body.stock) || 0);
 
     const item = await Item.findByIdAndUpdate(
       id,
@@ -75,10 +72,10 @@ export async function PUT(
       { new: true }
     ).lean();
     if (!item) {
-      return NextResponse.json({ error: 'Item not found' }, { status: 404 });
+      return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
     return NextResponse.json({
-      _id: item._id.toString(),
+      _id: item._id,
       name: item.name,
       price: item.price,
       description: item.description,
@@ -89,9 +86,9 @@ export async function PUT(
       updatedAt: item.updatedAt?.toISOString(),
     });
   } catch (error) {
-    console.error('PUT /api/items/[id]:', error);
+    console.error("PUT /api/items/[id]:", error);
     return NextResponse.json(
-      { error: 'Failed to update item' },
+      { error: "Failed to update item" },
       { status: 500 }
     );
   }
@@ -102,23 +99,23 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   if (!(await requireAuth(request))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   try {
     const { id } = await params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
     await connectDB();
     const item = await Item.findByIdAndDelete(id);
     if (!item) {
-      return NextResponse.json({ error: 'Item not found' }, { status: 404 });
+      return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('DELETE /api/items/[id]:', error);
+    console.error("DELETE /api/items/[id]:", error);
     return NextResponse.json(
-      { error: 'Failed to delete item' },
+      { error: "Failed to delete item" },
       { status: 500 }
     );
   }

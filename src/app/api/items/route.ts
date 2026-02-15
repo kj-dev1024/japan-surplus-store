@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       stock: stockNum >= 0 ? stockNum : 0,
     });
     return NextResponse.json({
-      _id: item._id.toString(),
+      _id: item._id,
       name: item.name,
       price: item.price,
       description: item.description,
