@@ -1,0 +1,68 @@
+[
+  {
+    "_id": "dummy-1",
+    "name": "Japanese Stainless Steel Kitchen Knife",
+    "price": 850,
+    "description": "High-quality surplus kitchen knife from Japan. Sharp, durable, and perfect for home cooking. Single bevel design.",
+    "imageUrl": "https://images.unsplash.com/photo-1593618998160-254d87c24b5c?w=400&h=400&fit=crop",
+    "category": "Kitchen",
+    "stock": 12,
+    "createdAt": "2024-01-15T00:00:00.000Z",
+    "updatedAt": "2024-01-15T00:00:00.000Z"
+  },
+  {
+    "_id": "dummy-2",
+    "name": "Vintage Japan Tool Set (6pc)",
+    "price": 1200,
+    "description": "Surplus tool set from Japan. Includes screwdrivers, pliers, and wrenches. Great for DIY and repairs.",
+    "imageUrl": "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
+    "category": "Tools",
+    "stock": 8,
+    "createdAt": "2024-01-15T00:00:00.000Z",
+    "updatedAt": "2024-01-15T00:00:00.000Z"
+  },
+  {
+    "_id": "dummy-3",
+    "name": "Japanese Ceramic Rice Bowl Set",
+    "price": 450,
+    "description": "Set of 4 ceramic rice bowls. Traditional design, microwave safe. Perfect for daily meals.",
+    "imageUrl": "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=400&h=400&fit=crop",
+    "category": "Kitchen",
+    "stock": 20,
+    "createdAt": "2024-01-15T00:00:00.000Z",
+    "updatedAt": "2024-01-15T00:00:00.000Z"
+  },
+  {
+    "_id": "dummy-4",
+    "name": "Surplus LED Work Light",
+    "price": 680,
+    "description": "Portable LED work light from Japan surplus. Adjustable stand, long battery life. Ideal for garage or workshop.",
+    "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
+    "category": "Tools",
+    "stock": 5,
+    "createdAt": "2024-01-15T00:00:00.000Z",
+    "updatedAt": "2024-01-15T00:00:00.000Z"
+  },
+  {
+    "_id": "dummy-5",
+    "name": "Japan Import Insulated Lunch Box",
+    "price": 520,
+    "description": "Stainless steel insulated bento box. Keeps food warm or cold for hours. Leak-proof and easy to clean.",
+    "imageUrl": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&h=400&fit=crop",
+    "category": "Kitchen",
+    "stock": 15,
+    "createdAt": "2024-01-15T00:00:00.000Z",
+    "updatedAt": "2024-01-15T00:00:00.000Z"
+  },
+  {
+    "_id": "dummy-6",
+    "name": "Vintage Japanese Cast Iron Teapot",
+    "price": 950,
+    "description": "Small tetsubin-style cast iron teapot. Enhances tea flavor and retains heat. Great for green tea.",
+    "imageUrl": "https://images.unsplash.com/photo-1563822249366-2c9d2cce74e2?w=400&h=400&fit=crop",
+    "category": "Kitchen",
+    "stock": 3,
+    "createdAt": "2024-01-15T00:00:00.000Z",
+    "updatedAt": "2024-01-15T00:00:00.000Z"
+  }
+]
