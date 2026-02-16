@@ -27,6 +27,26 @@ export default function AdminItemForm({
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [categoryItems, setcategoryItems] = useState([
+    "Furniture",
+    "Storage Boxes",
+    "Kitchenware",
+    "Cookware",
+    "Tableware",
+    "Home Decor",
+    "Microwaves",
+    "Rice Cookers",
+    "Induction Cookers",
+    "Mattresses",
+    "Clothes",
+    "Bags",
+    "Toys",
+    "Tools",
+    "Gardening Items",
+    "Fitness Equipment",
+    "Car Accessories",
+    "Office Supplies",
+  ]);
 
   useEffect(() => {
     if (item) {
@@ -168,15 +188,21 @@ export default function AdminItemForm({
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-200">
-              Category (optional)
+              Category
             </label>
-            <input
-              type="text"
+            <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              placeholder="e.g. Kitchen, Tools"
               className="mt-1 w-full rounded-xl border border-slate-200 px-4 py-2.5 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
-            />
+            >
+              <option value="">Select Category</option>
+
+              {categoryItems.map((item, index) => (
+                <option key={index} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-200">
@@ -205,7 +231,7 @@ export default function AdminItemForm({
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-200">
-              Image (Cloudflare R2)
+              Image
             </label>
             <div className="mt-1 flex gap-2">
               <input
