@@ -2,10 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Item } from "@/models/Item";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     await connectDB();
-    const items = await Item.find().sort({ createdAt: -1 }).lean();
+
+    const { searchParams } = new URL(req.url);
+
+    // Get page and limit from query params, default to 1 and 8
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = Number(searchParams.get("limit")) || 8;
+    const skip = (page - 1) * limit;
+
+    // Fetch items with pagination
+    const items = await Item.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
     const serialized = items.map((item) => ({
       _id: item._id,
       name: item.name,
@@ -17,6 +31,7 @@ export async function GET() {
       createdAt: item.createdAt?.toISOString() ?? new Date().toISOString(),
       updatedAt: item.updatedAt?.toISOString() ?? new Date().toISOString(),
     }));
+
     return NextResponse.json(serialized);
   } catch (error) {
     console.error("GET /api/items:", error);
