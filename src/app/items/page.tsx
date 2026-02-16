@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import ItemCard from '@/components/ItemCard';
-import ItemCardSkeleton from '@/components/ItemCardSkeleton';
-import ItemModal from '@/components/ItemModal';
-import { useCart } from '@/contexts/CartContext';
-import type { ItemResponse } from '@/types';
-import dummyItems from '@/data/dummy-items.json';
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import ItemCard from "@/components/ItemCard";
+import ItemCardSkeleton from "@/components/ItemCardSkeleton";
+import ItemModal from "@/components/ItemModal";
+import { useCart } from "@/contexts/CartContext";
+import type { ItemResponse } from "@/types";
+import dummyItems from "@/data/dummy-items.json";
 
 export default function ItemsPage() {
   const [items, setItems] = useState<ItemResponse[]>([]);
@@ -17,26 +17,25 @@ export default function ItemsPage() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch('/api/items')
+    fetch("/api/items")
       .then((res) => res.json())
       .then((data) => {
         if (cancelled) return;
         if (Array.isArray(data) && data.length > 0) {
           setItems(data);
-        } else {
-          setItems(dummyItems as ItemResponse[]);
         }
       })
       .catch(() => {
         if (!cancelled) {
-          toast.error('Failed to load items. Showing sample items.');
-          setItems(dummyItems as ItemResponse[]);
+          toast.error("Failed to load items. Showing sample items.");
         }
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleAddToCart = (item: ItemResponse) => {
@@ -57,7 +56,9 @@ export default function ItemsPage() {
         </div>
       ) : items.length === 0 ? (
         <div className="rounded-2xl border border-slate-200 bg-slate-50 py-16 text-center dark:border-slate-700 dark:bg-slate-800/50">
-          <p className="text-slate-600 dark:text-slate-300">No items available yet. Check back later!</p>
+          <p className="text-slate-600 dark:text-slate-300">
+            No items available yet. Check back later!
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
