@@ -21,7 +21,7 @@ export default function AdminItemForm({
   const [name, setName] = useState(item?.name ?? "");
   const [price, setPrice] = useState(item?.price?.toString() ?? "");
   const [description, setDescription] = useState(item?.description ?? "");
-  const [imageUrl, setImageUrl] = useState(item?.imageUrl ?? "");
+  const [imageUrl, setImageUrl] = useState(item?.imageUrl ?? []);
   const [category, setCategory] = useState(item?.category ?? "");
   const [stock, setStock] = useState(item?.stock?.toString() ?? "0");
   const [submitting, setSubmitting] = useState(false);
@@ -60,28 +60,43 @@ export default function AdminItemForm({
   }, [item]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image (JPEG, PNG, GIF, or WebP).");
-      return;
-    }
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
     setUploading(true);
+
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toast.error(data.error ?? "Upload failed");
-        return;
+      const uploadedUrls: string[] = [];
+
+      for (const file of Array.from(files)) {
+        if (!file.type.startsWith("image/")) {
+          toast.error(`${file.name} is not a valid image file.`);
+          continue;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          toast.error(data.error ?? `Upload failed for ${file.name}`);
+          continue;
+        }
+
+        uploadedUrls.push(data.url);
       }
-      setImageUrl(data.url);
-      toast.success("Image uploaded to R2");
+
+      if (uploadedUrls.length > 0) {
+        setImageUrl((prev) => [...prev, ...uploadedUrls]);
+        toast.success("Image(s) uploaded successfully to R2");
+      }
     } catch {
       toast.error("Upload failed");
     } finally {
@@ -105,7 +120,7 @@ export default function AdminItemForm({
       toast.error("Description is required");
       return;
     }
-    if (!imageUrl.trim()) {
+    if (!imageUrl) {
       toast.error("Image URL is required");
       return;
     }
@@ -120,10 +135,11 @@ export default function AdminItemForm({
         name: name.trim(),
         price: numPrice,
         description: description.trim(),
-        imageUrl: imageUrl.trim(),
+        imageUrl: imageUrl,
         category: category.trim() || undefined,
         stock: stockNum,
       };
+      console.log("body", body);
       const url = isEdit ? `/api/items/${item._id}` : "/api/items";
       const method = isEdit ? "PUT" : "POST";
       const res = await fetch(url, {
@@ -238,6 +254,7 @@ export default function AdminItemForm({
                 ref={fileInputRef}
                 type="file"
                 accept="image/jpeg,image/png,image/gif,image/webp"
+                multiple
                 onChange={handleFileChange}
                 className="hidden"
               />
@@ -251,14 +268,34 @@ export default function AdminItemForm({
               </button>
             </div>
 
-            {imageUrl && (
-              <div className="mt-2 h-20 w-20 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-600">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={imageUrl}
-                  alt="Preview"
-                  className="h-full w-full object-cover"
-                />
+            {imageUrl.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {imageUrl.map((url, index) => (
+                  <div
+                    key={index}
+                    className="relative h-20 w-20 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-600"
+                  >
+                    {/* Image */}
+                    <img
+                      src={url}
+                      alt={`Preview ${index + 1}`}
+                      className="h-full w-full object-cover"
+                    />
+
+                    {/* Remove Button */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setImageUrl((prev) =>
+                          prev.filter((_, i) => i !== index)
+                        )
+                      }
+                      className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-xs text-white transition hover:bg-black"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
           </div>

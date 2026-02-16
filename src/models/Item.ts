@@ -5,7 +5,7 @@ export interface IItem {
   name: string;
   price: number;
   description: string;
-  imageUrl: string;
+  imageUrl: string[];
   category?: string;
   stock: number;
   createdAt: Date;
@@ -17,7 +17,7 @@ const ItemSchema = new Schema<IItem>(
     name: { type: String, required: true },
     price: { type: Number, required: true },
     description: { type: String, required: true },
-    imageUrl: { type: String, required: true },
+    imageUrl: { type: [String], required: true },
     category: { type: String, required: false },
     stock: { type: Number, required: true, default: 0 },
   },

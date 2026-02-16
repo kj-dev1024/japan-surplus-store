@@ -11,7 +11,7 @@ export interface ItemResponse {
   name: string;
   price: number;
   description: string;
-  imageUrl: string;
+  imageUrl: string[];
   category?: string;
   stock: number;
   createdAt: string;

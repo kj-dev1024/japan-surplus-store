@@ -56,8 +56,7 @@ export async function PUT(
     if (typeof body.price === "number") update.price = body.price;
     if (body.description !== undefined)
       update.description = String(body.description).trim();
-    if (body.imageUrl !== undefined)
-      update.imageUrl = String(body.imageUrl).trim();
+    if (body.imageUrl !== undefined) update.imageUrl = body.imageUrl;
     if (body.category !== undefined)
       update.category =
         body.category === "" ? undefined : String(body.category).trim();

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
-import { useAuth } from '@/contexts/AuthContext';
-import ConfirmDialog from '@/components/ConfirmDialog';
-import AdminItemForm from '@/components/admin/AdminItemForm';
-import type { ItemResponse } from '@/types';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import AdminItemForm from "@/components/admin/AdminItemForm";
+import type { ItemResponse } from "@/types";
 
 export default function AdminDashboard() {
   const { token, logout } = useAuth();
@@ -19,10 +19,10 @@ export default function AdminDashboard() {
   const [deleting, setDeleting] = useState(false);
 
   const fetchItems = () => {
-    fetch('/api/items')
+    fetch("/api/items")
       .then((res) => res.json())
       .then((data) => Array.isArray(data) && setItems(data))
-      .catch(() => toast.error('Failed to load items'))
+      .catch(() => toast.error("Failed to load items"))
       .finally(() => setLoading(false));
   };
 
@@ -35,19 +35,19 @@ export default function AdminDashboard() {
     setDeleting(true);
     try {
       const res = await fetch(`/api/items/${deleteTarget._id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        toast.error(data.error ?? 'Failed to delete');
+        toast.error(data.error ?? "Failed to delete");
         return;
       }
       setItems((prev) => prev.filter((i) => i._id !== deleteTarget._id));
       setDeleteTarget(null);
-      toast.success('Item deleted');
+      toast.success("Item deleted");
     } catch {
-      toast.error('Failed to delete');
+      toast.error("Failed to delete");
     } finally {
       setDeleting(false);
     }
@@ -55,8 +55,8 @@ export default function AdminDashboard() {
 
   const handleLogout = () => {
     logout();
-    router.push('/');
-    toast.success('Logged out');
+    router.push("/");
+    toast.success("Logged out");
   };
 
   const handleFormSuccess = (updated?: ItemResponse) => {
@@ -106,7 +106,9 @@ export default function AdminDashboard() {
         </div>
       ) : items.length === 0 ? (
         <div className="rounded-2xl border border-slate-200 bg-slate-50 py-12 text-center dark:border-slate-700 dark:bg-slate-800/50">
-          <p className="text-slate-600 dark:text-slate-300">No items yet. Add your first item.</p>
+          <p className="text-slate-600 dark:text-slate-300">
+            No items yet. Add your first item.
+          </p>
           <button
             type="button"
             onClick={() => setFormOpen(true)}
@@ -121,22 +123,37 @@ export default function AdminDashboard() {
             <table className="w-full text-left text-sm">
               <thead className="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50">
                 <tr>
-                  <th className="px-4 py-3 font-medium text-slate-700 dark:text-slate-200">Image</th>
-                  <th className="px-4 py-3 font-medium text-slate-700 dark:text-slate-200">Name</th>
-                  <th className="px-4 py-3 font-medium text-slate-700 dark:text-slate-200">Category</th>
-                  <th className="px-4 py-3 font-medium text-slate-700 dark:text-slate-200">Price</th>
-                  <th className="px-4 py-3 font-medium text-slate-700 dark:text-slate-200">Stock</th>
-                  <th className="px-4 py-3 font-medium text-slate-700 dark:text-slate-200">Actions</th>
+                  <th className="px-4 py-3 font-medium text-slate-700 dark:text-slate-200">
+                    Image
+                  </th>
+                  <th className="px-4 py-3 font-medium text-slate-700 dark:text-slate-200">
+                    Name
+                  </th>
+                  <th className="px-4 py-3 font-medium text-slate-700 dark:text-slate-200">
+                    Category
+                  </th>
+                  <th className="px-4 py-3 font-medium text-slate-700 dark:text-slate-200">
+                    Price
+                  </th>
+                  <th className="px-4 py-3 font-medium text-slate-700 dark:text-slate-200">
+                    Stock
+                  </th>
+                  <th className="px-4 py-3 font-medium text-slate-700 dark:text-slate-200">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                 {items.map((item) => (
-                  <tr key={item._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                  <tr
+                    key={item._id}
+                    className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30"
+                  >
                     <td className="px-4 py-3">
                       <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-700">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={item.imageUrl}
+                          src={item.imageUrl[0]}
                           alt={item.name}
                           className="h-full w-full object-cover"
                         />
@@ -146,7 +163,7 @@ export default function AdminDashboard() {
                       {item.name}
                     </td>
                     <td className="px-4 py-3 text-slate-600 dark:text-slate-300">
-                      {item.category ?? '—'}
+                      {item.category ?? "—"}
                     </td>
                     <td className="px-4 py-3 text-slate-600 dark:text-slate-300">
                       ₱{item.price.toLocaleString()}
@@ -201,9 +218,9 @@ export default function AdminDashboard() {
         message={
           deleteTarget
             ? `"${deleteTarget.name}" will be permanently removed.`
-            : ''
+            : ""
         }
-        confirmLabel={deleting ? 'Deleting...' : 'Delete'}
+        confirmLabel={deleting ? "Deleting..." : "Delete"}
         danger
         onConfirm={handleDelete}
         onCancel={() => !deleting && setDeleteTarget(null)}

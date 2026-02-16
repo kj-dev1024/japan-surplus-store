@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       name: String(name).trim(),
       price: Number(price),
       description: String(description).trim(),
-      imageUrl: String(imageUrl).trim(),
+      imageUrl: Array.isArray(imageUrl) ? imageUrl : [imageUrl],
       category: category != null ? String(category).trim() : undefined,
       stock: stockNum >= 0 ? stockNum : 0,
     });
