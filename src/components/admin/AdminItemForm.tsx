@@ -171,7 +171,7 @@ export default function AdminItemForm({
         aria-hidden
         onClick={onClose}
       />
-      <div className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 animate-slide-up overflow-auto rounded-2xl bg-white p-6 shadow-modal dark:bg-slate-900">
+      <div className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-2xl bg-white p-6 shadow-modal dark:bg-slate-900">
         <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
           {isEdit ? "Edit Item" : "Add Item"}
         </h2>
