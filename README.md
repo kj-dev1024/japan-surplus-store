@@ -63,8 +63,6 @@ Admin credentials are stored in the **User** collection (hashed password). To cr
 npm run seed
 ```
 
-
-
 ### 3. MongoDB
 
 - **Local:** Start MongoDB. Set `MONGODB_URI=mongodb://localhost:27017` and `MONGODB_DB_NAME=japan-surplus-store` (or put the database in the URI: `mongodb://localhost:27017/japan-surplus-store`).

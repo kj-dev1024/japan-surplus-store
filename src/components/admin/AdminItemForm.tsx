@@ -82,6 +82,7 @@ export default function AdminItemForm({
           file.name.toLowerCase().endsWith(".heif")
         ) {
           try {
+            const { default: heic2any } = await import("heic2any");
             const converted = await heic2any({
               blob: file,
               toType: "image/jpeg",
