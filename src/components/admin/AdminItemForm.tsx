@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import type { ItemResponse } from "@/types";
+import heic2any from "heic2any";
 
 interface AdminItemFormProps {
   item: ItemResponse | null;
@@ -68,10 +69,36 @@ export default function AdminItemForm({
     try {
       const uploadedUrls: string[] = [];
 
-      for (const file of Array.from(files)) {
+      for (let file of Array.from(files)) {
         if (!file.type.startsWith("image/")) {
           toast.error(`${file.name} is not a valid image file.`);
           continue;
+        }
+
+        if (
+          file.type === "image/heic" ||
+          file.type === "image/heif" ||
+          file.name.toLowerCase().endsWith(".heic") ||
+          file.name.toLowerCase().endsWith(".heif")
+        ) {
+          try {
+            const converted = await heic2any({
+              blob: file,
+              toType: "image/jpeg",
+              quality: 0.9,
+            });
+
+            const blob = Array.isArray(converted) ? converted[0] : converted;
+
+            file = new File(
+              [blob as Blob],
+              file.name.replace(/\.(heic|heif)$/i, ".jpg"),
+              { type: "image/jpeg" }
+            );
+          } catch {
+            toast.error(`Failed to convert ${file.name}`);
+            continue;
+          }
         }
 
         const formData = new FormData();
@@ -253,7 +280,7 @@ export default function AdminItemForm({
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/jpeg,image/png,image/gif,image/webp"
+                accept="image/*"
                 multiple
                 onChange={handleFileChange}
                 className="hidden"
